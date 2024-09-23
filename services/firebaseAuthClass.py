@@ -2,13 +2,15 @@ from firebase_admin import auth, credentials
 import firebase_admin
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException
-
+from dotenv import load_dotenv
+import os
 
 class FirebaseAuth:
     def __init__(self) -> None:
-        cred = credentials.Certificate('keyFirebase.json')
+        load_dotenv()
+        cred = credentials.Certificate(os.getenv('CREDENTIAL_CERTIFICATE')) 
         firebase_admin.initialize_app(cred, {
-    'storageBucket': 'fluttereatsily.appspot.com'
+    'storageBucket': os.getenv('STORAGE_BUCKET')
 })
 
     def verify_firebase_token(self, credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
