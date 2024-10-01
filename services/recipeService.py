@@ -31,8 +31,8 @@ class RecipeService:
         return categories
     def store_recipe(self,recipe:Recipe) -> str:
         recipe_dict = recipe.model_dump()
-        doc_ref = self.db.collection("Recetas").add(recipe_dict)
-        return doc_ref
+        created_time, doc_ref = self.db.collection("Recetas").add(recipe_dict)
+        return doc_ref.id
     
     def store_file(self,file: UploadFile):
         unique_filename = f'{uuid.uuid4()}{os.path.splitext(file.filename)[1]}'
