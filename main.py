@@ -20,7 +20,7 @@ async def secure_endpoint(
     ingredients_list = json.loads(ingredients)
     portions_list = json.loads(portions)
     recipe_service = RecipeService()
-    categories = recipe_service.get_category(ingredients)
+    categories = recipe_service.get_category(ingredients_list)
     public_url = recipe_service.store_file(image)
     recipe = Recipe(
         name = name,
