@@ -20,10 +20,8 @@ class RecipeService:
             vect = pickle.load(f)
         new_recipes_joined = ' '.join(new_recipes) 
         new_data_vectorized = vect.transform([new_recipes_joined])
-
         # Use the loaded model to make predictions
         predictions = multi_target_rf.predict(new_data_vectorized)
-
         categories = []
         # Get the first and only prediction
         prediction = predictions[0]
@@ -31,15 +29,14 @@ class RecipeService:
             if is_set:
                 categories.append(category)
         return categories
-    def store_recipe(self,recipe:Recipe):
+    def store_recipe(self,recipe:Recipe) -> str:
         recipe_dict = recipe.model_dump()
-    # Save the data in Firestore (you can modify the collection name as needed)
         doc_ref = self.db.collection("Recetas").add(recipe_dict)
-        return {"message": "User data saved successfully", "user_id": doc_ref[1].id}
+        return doc_ref
     
     def store_file(self,file: UploadFile):
         unique_filename = f'{uuid.uuid4()}{os.path.splitext(file.filename)[1]}'
-        bucket_name = 'fluttereatsily.appspot.com'
+        bucket_name = os.getenv('STORAGE_BUCKET')
         bucket = storage.bucket(bucket_name)
         blob = bucket.blob(f'Img recetas/{unique_filename}')
         blob.upload_from_file(file.file, content_type=file.content_type)

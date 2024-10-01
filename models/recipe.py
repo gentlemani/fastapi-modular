@@ -13,6 +13,7 @@ class Recipe(BaseModel):
     category: list[str] = []
     created_at: datetime = datetime.now(timezone.utc)
     updated_at: datetime = datetime.now(timezone.utc)
+    created_by:str = None
 
     def set_updated_timestamp(self):
         """Manually update the `updated_at` field."""

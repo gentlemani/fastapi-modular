@@ -1,44 +1,42 @@
-from fastapi import FastAPI, Form, UploadFile, File, Depends,HTTPException
+from fastapi import FastAPI, Form, UploadFile, File, Depends
 from fastapi.responses import JSONResponse
 from services.recipeService import RecipeService
 from services.firebaseAuthClass import FirebaseAuth
 from models.recipe import Recipe
-from typing import List
-
+import json
 app = FastAPI()
 
 auth_service = FirebaseAuth()
-
-@app.post("/recipe")
+prefix = "/api/v1"
+@app.post(prefix + "/recipe")
 async def secure_endpoint(
     image: UploadFile = File(...),
     name: str = Form(...),
     description: str = Form(...),
-    ingredients: List[str] = Form(...),
-    portions: List[str] = Form(...),
+    ingredients: str = Form(..., example=["pasta", "tomato sauce", "cheese"]),
+    portions: str = Form(...),
     decoded_token=Depends(auth_service.verify_firebase_token)
 ):
-    
-    # Use the RecipeService to handle the file upload
+    ingredients_list = json.loads(ingredients)
+    portions_list = json.loads(portions)
     recipe_service = RecipeService()
     categories = recipe_service.get_category(ingredients)
-    if categories is None:
-        raise HTTPException(status_code=400, detail="The provided ingredients do not match the required ones.")
     public_url = recipe_service.store_file(image)
     recipe = Recipe(
-        name=name,
-        description=description,
-        ingredients=ingredients,
-        portions=portions,
-        image=public_url
+        name = name,
+        description = description,
+        ingredients = ingredients_list,
+        portions = portions_list,
+        image = public_url,
+        created_by = decoded_token.get('uid')
     )
     recipe.category = categories
-    recipe_service.store_recipe(recipe)
-    email = decoded_token.get('email')
+    recipe_id = recipe_service.store_recipe(recipe)
     return JSONResponse(
         status_code=201,
         content={
-            "message": f"Hello, {email}!",
+            "message": "Recipe created",
+            "recipe_id": recipe_id,
             "Categories": categories,
         }
     )
