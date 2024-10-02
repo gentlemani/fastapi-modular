@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from services.recipeService import RecipeService
 from services.firebaseAuth import FirebaseAuth
 
-from services.recomendationService import RecomendationService
+from services.recommendationService import RecommendationService
 import json
 app = FastAPI()
 
@@ -15,7 +15,7 @@ async def create_recipe(
     name: str = Form(...),
     description: str = Form(...),
     ingredients: str = Form(..., example=["pasta", "tomato sauce", "cheese"]),
-    portions: str = Form(...),
+    portions: str = Form(...,example=["200gr", "1l", "Una pizca"]),
     diners: int = Form(...),
     decoded_token=Depends(auth_service.verify_firebase_token)
 ):
@@ -33,14 +33,14 @@ async def create_recipe(
         }
     )
 
-@app.get(prefix + "/recomendation")
-async def get_recomendations(decoded_token=Depends(auth_service.verify_firebase_token)):
-    recomendation_service = RecomendationService()
-    recomendations = recomendation_service.get_recommendation(decoded_token.get('uid'))
+@app.get(prefix + "/recommendation")
+async def get_recommendations(decoded_token=Depends(auth_service.verify_firebase_token)):
+    recommendation_service = RecommendationService()
+    recommendations = recommendation_service.get_recommendation(decoded_token.get('uid'))
     return JSONResponse(
         status_code=200,
         content={
             "message": "Recipe created",
-            "recomendations":recomendations
+            "recommendations":recommendations
         }
     )
