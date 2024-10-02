@@ -15,6 +15,7 @@ async def secure_endpoint(
     description: str = Form(...),
     ingredients: str = Form(..., example=["pasta", "tomato sauce", "cheese"]),
     portions: str = Form(...),
+    diners: int = Form(...),
     decoded_token=Depends(auth_service.verify_firebase_token)
 ):
     ingredients_list = json.loads(ingredients)
@@ -28,6 +29,7 @@ async def secure_endpoint(
         ingredients = ingredients_list,
         portions = portions_list,
         image = public_url,
+        diner = diners,
         created_by = decoded_token.get('uid')
     )
     recipe.category = categories
