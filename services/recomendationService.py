@@ -12,12 +12,12 @@ class RecomendationService:
         users_service = UserService()
         self.users = users_service.get_all_users()
         
-    def get_recommendation(self,user_id:str,top_n: int = 5)->list:
+    def get_recommendation(self,user_id:str,top_n: int = None)->list:
         """Get recommendations for a user.
 
         Args:
             user_id (str): User identifier
-            top_n (int, optional): Máximum number of recipes to retreive. Defaults to 5.
+            top_n (int, optional): Máximum number of recipes to retreive. Defaults to None.
 
         Returns:
             list: Returns the recommendations obtained.
@@ -39,14 +39,14 @@ class RecomendationService:
             puntuacion += preferences.get(category, 0)
         return puntuacion
 
-    def __recipe_recommendation_kmeans(self,user_id:str,users: Dict[str,Dict[str,int]], recipes: List[Dict[str,str]],top_n: int = 5) -> list:
+    def __recipe_recommendation_kmeans(self,user_id:str,users: Dict[str,Dict[str,int]], recipes: List[Dict[str,str]],top_n: int = None) -> list:
         """Recommend certain recipes based on the user frecuency table, other users and the recipes availables.
 
         Args:
             user_id (str): User identificator.
             users (Dict[str,Dict[str,str]]): All users to compare to. The key must be the id of the user.
             recipes (dict): recipes, It must have some key values like `name`, `id`, and `category`.
-            top_n (_type_, optional): Number of maximum options to be listed. Defaults to 5:int.
+            top_n (_type_, optional): Number of maximum options to be listed. Defaults to None.
 
         Returns:
             list: Returns all the recomedations obtained.
@@ -99,7 +99,10 @@ class RecomendationService:
         ]
 
         sort_recipes = sorted(rated_recipes, key=lambda x: x['puntuation'], reverse=True)
-        return sort_recipes[:top_n]
+        if(top_n):
+            return sort_recipes[:top_n]
+        else:
+            return sort_recipes
 
     def show_kmeans_recommendations(self,recomendations: list, user_id:str) -> None:
         """Prints in console the result obtained for a particular user.
