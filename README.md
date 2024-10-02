@@ -5,7 +5,7 @@
 
 Example:
 
-    docker build recipe_img .
+    docker build -t recipe_img .
 **Then to run the container you will need a tls certificate (https). It is necessary to set two volumes to indicate the certificates. The `:ro` means *read only* to prevent modifications to the certificates. **
 
 docker run -d -p 443:443 \
