@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 import os
 import uuid
-from typing import List
+from typing import List, Dict
 from firebase_admin import firestore,storage
 from models.recipe import Recipe
 from fastapi import UploadFile
@@ -20,10 +20,8 @@ class RecipeService:
             vect = pickle.load(f)
         new_recipes_joined = ' '.join(new_recipes) 
         new_data_vectorized = vect.transform([new_recipes_joined])
-        # Use the loaded model to make predictions
         predictions = multi_target_rf.predict(new_data_vectorized)
         categories = []
-        # Get the first and only prediction
         prediction = predictions[0]
         for category, is_set in zip(y.columns, prediction):
             if is_set:
@@ -42,4 +40,13 @@ class RecipeService:
         blob.upload_from_file(file.file, content_type=file.content_type)
         blob.make_public()
         return blob.public_url
+    
+    def getAllRecipes(self)-> List[Dict]:
+        collection_ref = self.db.collection('ingredients')
+        docs = collection_ref.stream()
+        documents = []
+        for doc in docs:
+            documents.append(doc.to_dict()) 
+            print(f'Document ID: {doc.id}, Data: {doc.to_dict()}')
+        return documents
 

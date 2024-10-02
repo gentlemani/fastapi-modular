@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Form, UploadFile, File, Depends
 from fastapi.responses import JSONResponse
 from services.recipeService import RecipeService
-from services.firebaseAuthClass import FirebaseAuth
+from services.firebaseAuth import FirebaseAuth
 from models.recipe import Recipe
 import json
 app = FastAPI()

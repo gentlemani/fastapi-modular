@@ -1,4 +1,4 @@
 keyFirebase.json
-env/*
+*env/*
 __pycache__
 .env
