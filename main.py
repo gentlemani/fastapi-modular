@@ -51,7 +51,7 @@ async def create_recipe(
     decoded_token=Depends(auth_service.verify_firebase_token)
 ):
     recipe_service = RecipeService()
-    categories = recipe_service.calculate_categories(ingredients)
+    categories = recipe_service.calculate_categories(json.loads(ingredients))
     return JSONResponse(
         status_code=201,
         content={
