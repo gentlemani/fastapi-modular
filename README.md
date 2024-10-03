@@ -20,8 +20,4 @@ docker run -d -p 443:443 \
 	  -v /etc/letsencrypt/live/mydomaisthis.com/privkey.pem:/etc/letsencrypt/live/domain/privkey.pem:ro \
 	  recipe_img
 
-    	docker run -d -p 443:443 \
-	  -v /etc/letsencrypt/live/eatsilyapp.zapto.org/fullchain.pem:/etc/letsencrypt/live/domain/fullchain.pem:ro \
-	  -v /etc/letsencrypt/live/eatsilyapp.zapto.org/privkey.pem:/etc/letsencrypt/live/domain/privkey.pem:ro \
-	  recipe_api
 

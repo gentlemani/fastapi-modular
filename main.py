@@ -45,8 +45,8 @@ async def get_recommendations(decoded_token=Depends(auth_service.verify_firebase
         }
     )
     
-@app.get(prefix + "/category")
-async def create_recipe(
+@app.post(prefix + "/category")
+async def get_category(
     ingredients: str = Form(..., example=["pasta", "tomato sauce", "cheese"]),
     decoded_token=Depends(auth_service.verify_firebase_token)
 ):
