@@ -16,7 +16,7 @@ class RecommendationService:
         """Get recommendations for a user.
 
         Args:
-            user_id (str): User identifier
+            user_id (str): User identifier.
             top_n (int, optional): Máximum number of recipes to retreive. Defaults to None.
 
         Returns:
@@ -46,7 +46,7 @@ class RecommendationService:
             user_id (str): User identificator.
             users (Dict[str,Dict[str,str]]): All users to compare to. The key must be the id of the user.
             recipes (dict): recipes, It must have some key values like `name`, `id`, and `category`.
-            top_n (_type_, optional): Number of maximum options to be listed. Defaults to None.
+            top_n (int, optional): Number of maximum options to be listed. Defaults to None.
 
         Returns:
             list: Returns all the recomedations obtained.
@@ -82,7 +82,7 @@ class RecommendationService:
 
         filtered_recipes = [
             recipe for recipe in recipes
-            if not any(cat in categorias_excluir for cat in recipe.get('category', []))
+            if not any(cat in categorias_excluir for cat in recipe.get('category', [])) and (not recipe.get('created_by') or recipe.get('created_by') == user_id)
         ]
 
         if not filtered_recipes:
