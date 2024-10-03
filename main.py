@@ -53,9 +53,9 @@ async def create_recipe(
     recipe_service = RecipeService()
     categories = recipe_service.calculate_categories(json.loads(ingredients))
     return JSONResponse(
-        status_code=201,
+        status_code=200,
         content={
-            "message": "Recipe created",
+            "message": "Success",
             "Categories": categories,
         }
     )
