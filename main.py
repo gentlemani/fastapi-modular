@@ -44,3 +44,18 @@ async def get_recommendations(decoded_token=Depends(auth_service.verify_firebase
             "recommendations":recommendations
         }
     )
+    
+@app.get(prefix + "/category")
+async def create_recipe(
+    ingredients: str = Form(..., example=["pasta", "tomato sauce", "cheese"]),
+    decoded_token=Depends(auth_service.verify_firebase_token)
+):
+    recipe_service = RecipeService()
+    categories = recipe_service.calculate_categories(ingredients)
+    return JSONResponse(
+        status_code=201,
+        content={
+            "message": "Recipe created",
+            "Categories": categories,
+        }
+    )

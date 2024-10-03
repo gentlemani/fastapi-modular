@@ -23,7 +23,7 @@ class RecipeService:
     
     def create_recipe(self,name:str,description:str,ingredients: List[str],portions:List[str],diners:int,uid:str,image: UploadFile)->Recipe:
         recipe_service = RecipeService()
-        self.categories = recipe_service.__calculate_categories(ingredients)
+        self.categories = recipe_service.calculate_categories(ingredients)
         public_url = recipe_service.__store_file(image)
         recipe = Recipe(
             name = name,
@@ -46,7 +46,7 @@ class RecipeService:
         blob.make_public()
         return blob.public_url
     
-    def __calculate_categories(self,new_recipes:List[str])->list|None:
+    def calculate_categories(self,new_recipes:List[str])->list|None:
         y = pd.read_pickle(self.current_directory + "/../resources/processed_y.pkl")
         with open(self.current_directory + "/../resources/modelo_recetas.pkl", 'rb') as f:
             multi_target_rf = pickle.load(f)
